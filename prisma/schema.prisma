@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Member {
+  id           Int      @id() @default(autoincrement())
+  branchId     String
+  pickupId     String
+  phone        String
+  name         String
+  nameEng      String
+  address      String
+  addressEng   String
+  districe     String
+  state        String
+  province     String
+  postcode     Int
+  landMark     String?
+  email        String
+  lat          String
+  lon          String
+  employee     String
+  openTime     String
+  closeTime    String
+  kerryId      String?
+  shopType     String   @default("shop")
+  costRate     Int      @default(13)
+  saleRate     Int      @default(30)
+  remember     String?
+  registerDate DateTime
+  status       String   @default("used")
+  user         User[]
+}
+
+model User {
+  id           Int      @id() @default(autoincrement())
+  memberId     Int
+  name         String
+  usr          String
+  pwd          String
+  registerDate DateTime
+  status       String   @default("used")
+  member       Member   @relation(fields: [memberId], references: [id])
+}
+
+model Config {
+  id     Int     @id() @default(autoincrement())
+  name   String
+  value  String
+  value2 String?
+  status String  @default("used")
+}
+
+model BookingList {
+  id           Int      @id() @default(autoincrement())
+  memberId     Int
+  userId       Int
+  trackingCode String
+  courierCode  String
+  courierName  String
+  parcelData   String
+  parcelUpdate String?
+  srvCost      Int
+  priceCost    Int
+  priceSale    Int
+  priceArea    Int
+  codAmount    Int
+  codService   Int
+  bookingTime  DateTime @default(now())
+  updateTime   DateTime @default(now())
+  status       String   @default("booking")
+}
+
+model AddressBook {
+  id          Int     @id() @default(autoincrement())
+  addressID   Int
+  memberId    Int
+  name        String
+  phone       String
+  address     String
+  subDistrict String
+  district    String
+  province    String
+  zipCode     Int
+  remark      String?
+  isBlacklist Boolean @default(false)
+  status      String  @default("used")
+}
+
+model GetCourier {
+  id              Int      @id() @default(autoincrement())
+  memberId        Int
+  courierCode     String
+  amount          String
+  pickupAddressId String
+  ticketPickupId  Int
+  staffInfoId     String?
+  staffInfoName   String?
+  staffInfoPhone  String?
+  upCountryNote   String?
+  timeoutAtText   String?
+  ticketMessage   String?
+  notice          String?
+  remark          String?
+  getTime         DateTime @default(now())
+}
+
+model Credit {
+  id          Int @id() @default(autoincrement())
+  memberId    Int
+  amount      Int
+  amountHode  Int
+  amountBonus Int
+}
+
+model CreditLog {
+  id         Int      @id() @default(autoincrement())
+  outTradeNo String
+  memberId   Int
+  userId     Int
+  oldAmount  Int
+  amout      Int
+  newAmount  Int
+  amountType String
+  logType    String
+  msg        String?
+  logTime    DateTime @default(now())
+}
